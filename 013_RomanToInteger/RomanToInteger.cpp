@@ -2,8 +2,10 @@
 #include <string>
 #include <cmath>
 #include <cstring>
+#include <unordered_map>
 
 int romanToInt(std::string s);
+int shorterRomanToInt(std::string s);
 
 enum Roman { M=1000, D=500, C=100, L=50, X=10, V=5, I=1 };
 
@@ -29,6 +31,28 @@ int main(void)
 
     std::cout << "\n\n\nTest Case 3: MCMXCIV\nExpected: 1994\n";
     result = romanToInt("MCMXCIV");
+    std::cout << "Result: " << result << "\n";
+
+    std::cout << "\n013 - Roman to Integer (Shorter - Slower - Implementation\n\n";
+
+    std::cout << "Test Case 1: III\nExpected: 3\n";
+    result = shorterRomanToInt("III");
+    std::cout << "Result: " << result;
+
+    std::cout << "\n\n\nTest Case 1.2: IX\nExpected: 9\n";
+    result = shorterRomanToInt("IX");
+    std::cout << "Result: " << result << "\n";
+
+    std::cout << "\n\n\nTest Case 1.1: IV\nExpected: 4\n";
+    result = shorterRomanToInt("IV");
+    std::cout << "Result: " << result << "\n";
+
+    std::cout << "\n\n\nTest Case 2: LVIII\nExpected: 58\n";
+    result = shorterRomanToInt("LVIII");
+    std::cout << "Result: " << result << "\n";
+
+    std::cout << "\n\n\nTest Case 3: MCMXCIV\nExpected: 1994\n";
+    result = shorterRomanToInt("MCMXCIV");
     std::cout << "Result: " << result << "\n";
     
     return 0;
@@ -183,4 +207,34 @@ int romanToInt(std::string s)
     globalsum += localsum;
 
     return globalsum;
+}
+
+// https://leetcode.com/problems/roman-to-integer/discuss/6547/Clean-O(n)-c%2B%2B-solution
+// 
+// Note :: Not faster, but shorter 
+int shorterRomanToInt(std::string s)
+{
+    std::unordered_map<char, int> T = { { 'I', 1 },
+                                    { 'V', 5 },
+                                    { 'X', 10 },
+                                    { 'L', 50 },
+                                    { 'C', 100 },
+                                    { 'D', 500 },
+                                    { 'M', 1000 } };
+        
+    int sum = T[s.back()];
+
+    for (int i = s.length()-2; i >= 0; --i)
+    {
+        if (T[s[i]] < T[s[i+1]])
+        {
+            sum -= T[s[i]];
+        }
+        else
+        {
+            sum += T[s[i]];
+        }
+    }
+
+    return sum;
 }
